@@ -1,4 +1,4 @@
 augroup Slack
   autocmd!
-  autocmd BufReadCmd slack://* call slack#Openslack()
+  autocmd BufReadCmd slack://ch/* call slack#OpenCh(expand("<amatch>"))
 augroup END
