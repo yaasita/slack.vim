@@ -3,7 +3,7 @@
 "
 " slack.vim - edit slack channels
 "
-" Version: 0.2
+" Version: 0.3
 " Maintainer:	yaasita < https://github.com/yaasita/slack.vim >
 " Last Change:	2015/03/29.
 
