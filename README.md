@@ -7,6 +7,13 @@ slackをファイル見たく編集して、ポストできるやつ
 
 ![slack-vim](http://i.gyazo.com/5e3430a3d959ddc53d156611c3b2ba47.gif)
 
+## 動作に必要なもの
+
+- perl
+- vim (perlインタフェイス)
+- curl
+- gunzip
+
 ## 使い方
 
 なんか適当なパッケージマネージャで入れる
