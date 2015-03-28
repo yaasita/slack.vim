@@ -34,6 +34,8 @@ vimrcとかに書いておく
 
     vim slack://ch/
 
+![list](https://41.media.tumblr.com/003169d18d3b0818b60c75856a91d259/tumblr_nlxmda1Aig1riy4fno1_400.png)
+
 ## TODO
 
 - リファクタリング
