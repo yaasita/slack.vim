@@ -25,8 +25,8 @@ function! slack#OpenCh(slack_url) "{{{
     normal! G
 endfunction "}}}
 function! slack#WriteCh(slack_url) "{{{
-    let ch_name = matchstr(a:slack_url,'\v[a-zA-Z0-9\-]+$')
-    let ch_id   = s:Channel2ID(server_name)
+    let server_name = matchstr(a:slack_url,'\v[a-zA-Z0-9\-]+$')
+    let server_id = s:Channel2ID(server_name)
     perl << EOF
     my $i = $curbuf->Count();
     my @data;
@@ -48,7 +48,7 @@ function! slack#WriteCh(slack_url) "{{{
             $urlenc .= $str;
         }
         my $API_TOKEN = VIM::Eval("g:yaasita_slack_token");
-        my $SERVER_ID = VIM::Eval("ch_id");
+        my $SERVER_ID = VIM::Eval("server_id");
         system("curl -s 'https://slack.com/api/chat.postMessage?token=${API_TOKEN}&channel=${SERVER_ID}&text=${urlenc}&as_user=1&pretty=1' > /dev/null") and die $!;
     }
 EOF
