@@ -9,8 +9,8 @@ slackをファイル見たく編集して、ポストできるやつ
 
 ## 動作に必要なもの
 
-- perl
 - vim (perlインタフェイス)
+- perl
 - curl
 - gunzip
 
