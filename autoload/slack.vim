@@ -148,6 +148,7 @@ function! s:CreateHash() "{{{
         # user hash
         system("curl -s -H 'Accept-Encoding: gzip' 'https://slack.com/api/users.list?token=${API_TOKEN}&pretty=1' | gunzip -c > user_list.txt") and die $!;
         our %users;
+        $users{"USLACKBOT"}="slackbot"; # slack bot 追加
         open (my $fh, "<", 'user_list.txt') or die $!;
         {
             my ($id,$name);
