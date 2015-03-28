@@ -11,6 +11,14 @@ let w:yaasita_slack_hash = 0
 
 function! slack#OpenCh(slack_url) "{{{
     let tmpfile = tempname()
+    if a:slack_url == "slack://ch/"
+        if !w:yaasita_slack_hash
+            call s:CreateHash()
+        endif
+        e slack://ch/
+        call s:ShowChIndex()
+        return
+    endif
     "let tmpfile = "/tmp/slack" "debug
     let server_name = matchstr(a:slack_url,'\v[a-zA-Z0-9\-]+$')
     let server_id = s:Channel2ID(server_name)
@@ -25,6 +33,9 @@ function! slack#OpenCh(slack_url) "{{{
     normal! G
 endfunction "}}}
 function! slack#WriteCh(slack_url) "{{{
+    if a:slack_url == "slack://ch/"
+        call slack#OpenCh(a:slack_url)
+    endif
     let server_name = matchstr(a:slack_url,'\v[a-zA-Z0-9\-]+$')
     let server_id = s:Channel2ID(server_name)
     perl << EOF
@@ -152,4 +163,12 @@ function! s:CreateHash() "{{{
         close $fh;
 EOF
     let w:yaasita_slack_hash = 1
+endfunction "}}}
+function! s:ShowChIndex() "{{{
+    perl << EOF
+    my @line = keys %channels;
+    $_ = "slack://ch/$_" for @line;
+    $curbuf->Append(1, @line);
+EOF
+    setlocal nomod
 endfunction "}}}
