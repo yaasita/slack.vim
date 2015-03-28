@@ -1,24 +1,58 @@
 " vim: set sw=4 et fdm=marker:
 "
 "
-" r2puki2.vim - Convert RedmineWiki to Pukiwiki
+" slack.vim - edit slack
 "
-" Version: 0.2
-" Maintainer:	yaasita < https://github.com/yaasita/r2puki2 >
-" Last Change:	2015/03/28.
+" Version: 0.1
+" Maintainer:	yaasita < https://github.com/yaasita/slack.vim >
+" Last Change:	2015/03/29.
 
 let w:yaasita_slack_hash = 0
 
 function! slack#OpenCh(slack_url) "{{{
-    "let tmpfile = tempname()
-    let tmpfile = "/tmp/slack"
+    let tmpfile = tempname()
+    let tmpfile = "/tmp/slack" "debug
     let server_name = matchstr(a:slack_url,'\v[a-zA-Z0-9\-]+$')
     let server_id = s:Channel2ID(server_name)
     "call system('curl -s "https://slack.com/api/channels.history?token=' . g:yaasita_slack_token . '&channel=' . server_id . '&pretty=1" > ' . tmpfile)
     "call s:ConvertText(tmpfile)
+    setlocal nomod
     exe "e ".tmpfile
-    exe "bw ".a:slack_url
+    exe "bw! ".a:slack_url
     exe "f " . a:slack_url
+    exe "bw! ".tmpfile
+    redr!
+    normal! G
+endfunction "}}}
+function! slack#WriteCh(slack_url) "{{{
+    let ch_name = matchstr(a:slack_url,'\v[a-zA-Z0-9\-]+$')
+    let ch_id   = s:Channel2ID(server_name)
+    perl << EOF
+    my $i = $curbuf->Count();
+    my @data;
+    while ( $i > 1 ){
+        my $line = $curbuf->Get($i);
+        unshift (@data,$line);
+        if ($line =~ /^=== input ===/){
+            last;
+        }
+        $i--;
+    }
+    if ($data[0] =~ /^=== input ===/ and @data >= 2){
+        shift @data;
+        my $urlenc = "";
+        for (@data){
+            my $str = $_;
+            $str =~ s/([^ 0-9a-zA-Z])/"%".uc(unpack("H2",$1))/eg;
+            $str =~ s/ /+/g;
+            $urlenc .= $str;
+        }
+        my $API_TOKEN = VIM::Eval("g:yaasita_slack_token");
+        my $SERVER_ID = VIM::Eval("ch_id");
+        system("curl -s 'https://slack.com/api/chat.postMessage?token=${API_TOKEN}&channel=${SERVER_ID}&text=${urlenc}&as_user=1&pretty=1' > /dev/null") and die $!;
+    }
+EOF
+    call slack#OpenCh(a:slack_url)
 endfunction "}}}
 function! s:ConvertText(source_file) "{{{
     perl << EOF
@@ -61,6 +95,7 @@ function! s:ConvertText(source_file) "{{{
         s/\\n/\n     /g;
         print $wr2 $_;
     }
+    print $wr2 "\n\n=== input ===\n";
     close $wr2;
 EOF
 endfunction "}}}
