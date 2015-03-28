@@ -5,17 +5,20 @@
 "
 " Version: 0.2
 " Maintainer:	yaasita < https://github.com/yaasita/r2puki2 >
-" Last Change:	2015/03/26.
+" Last Change:	2015/03/28.
 
 let w:yaasita_slack_hash = 0
 
 function! slack#OpenCh(slack_url) "{{{
-    let tmpfile = tempname()
+    "let tmpfile = tempname()
+    let tmpfile = "/tmp/slack"
     let server_name = matchstr(a:slack_url,'\v[a-zA-Z0-9\-]+$')
     let server_id = s:Channel2ID(server_name)
-    call system('curl -s "https://slack.com/api/channels.history?token=' . g:yaasita_slack_token . '&channel=' . server_id . '&pretty=1" > ' . tmpfile)
-    call s:ConvertText(tmpfile)
+    "call system('curl -s "https://slack.com/api/channels.history?token=' . g:yaasita_slack_token . '&channel=' . server_id . '&pretty=1" > ' . tmpfile)
+    "call s:ConvertText(tmpfile)
     exe "e ".tmpfile
+    exe "bw ".a:slack_url
+    exe "f " . a:slack_url
 endfunction "}}}
 function! s:ConvertText(source_file) "{{{
     perl << EOF
@@ -55,6 +58,7 @@ function! s:ConvertText(source_file) "{{{
     close $fh2;
     open (my $wr2, ">",$srcfile) or die $!;
     for (reverse @line){
+        s/\\n/\n     /g;
         print $wr2 $_;
     }
     close $wr2;
@@ -112,5 +116,5 @@ function! s:CreateHash() "{{{
         }
         close $fh;
 EOF
-    let b:yaasita_slack_server_hash = 1
+    let w:yaasita_slack_hash = 1
 endfunction "}}}
