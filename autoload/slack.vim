@@ -22,7 +22,7 @@ function! slack#OpenCh(slack_url) "{{{
     "let tmpfile = "/tmp/slack" "debug
     let server_name = matchstr(a:slack_url,'\v[a-zA-Z0-9\-]+$')
     let server_id = s:Channel2ID(server_name)
-    call system('curl -s "https://slack.com/api/channels.history?token=' . g:yaasita_slack_token . '&channel=' . server_id . '&pretty=1" > ' . tmpfile)
+    call system('curl -s -H "Accept-Encoding: gzip" "https://slack.com/api/channels.history?token=' . g:yaasita_slack_token . '&channel=' . server_id . '&pretty=1" | gunzip -c > ' . tmpfile)
     call s:ConvertText(tmpfile)
     setlocal nomod
     exe "e ".tmpfile
@@ -128,7 +128,7 @@ function! s:CreateHash() "{{{
         my $API_TOKEN=VIM::Eval("g:yaasita_slack_token");
 
         # server hash
-        system("curl -s 'https://slack.com/api/channels.list?token=${API_TOKEN}&pretty=1' > channels_list.txt") and die $!;
+        system("curl -s -H 'Accept-Encoding: gzip' 'https://slack.com/api/channels.list?token=${API_TOKEN}&pretty=1' | gunzip -c > channels_list.txt") and die $!;
         our %channels;
         open (my $fh, "<", 'channels_list.txt') or die $!;
         {
@@ -146,7 +146,7 @@ function! s:CreateHash() "{{{
         close $fh;
 
         # user hash
-        system("curl -s 'https://slack.com/api/users.list?token=${API_TOKEN}&pretty=1' > user_list.txt") and die $!;
+        system("curl -s -H 'Accept-Encoding: gzip' 'https://slack.com/api/users.list?token=${API_TOKEN}&pretty=1' | gunzip -c > user_list.txt") and die $!;
         our %users;
         open (my $fh, "<", 'user_list.txt') or die $!;
         {
