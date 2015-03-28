@@ -34,6 +34,7 @@ function! slack#OpenCh(slack_url) "{{{
 endfunction "}}}
 function! slack#WriteCh(slack_url) "{{{
     if a:slack_url == "slack://ch/"
+        set nomod
         call slack#OpenCh(a:slack_url)
     endif
     let server_name = matchstr(a:slack_url,'\v[a-zA-Z0-9\-]+$')
