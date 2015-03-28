@@ -1,7 +1,7 @@
 " vim: set sw=4 et fdm=marker:
 "
 "
-" slack.vim - edit slack
+" slack.vim - edit slack channels
 "
 " Version: 0.1
 " Maintainer:	yaasita < https://github.com/yaasita/slack.vim >
@@ -11,11 +11,11 @@ let w:yaasita_slack_hash = 0
 
 function! slack#OpenCh(slack_url) "{{{
     let tmpfile = tempname()
-    let tmpfile = "/tmp/slack" "debug
+    "let tmpfile = "/tmp/slack" "debug
     let server_name = matchstr(a:slack_url,'\v[a-zA-Z0-9\-]+$')
     let server_id = s:Channel2ID(server_name)
-    "call system('curl -s "https://slack.com/api/channels.history?token=' . g:yaasita_slack_token . '&channel=' . server_id . '&pretty=1" > ' . tmpfile)
-    "call s:ConvertText(tmpfile)
+    call system('curl -s "https://slack.com/api/channels.history?token=' . g:yaasita_slack_token . '&channel=' . server_id . '&pretty=1" > ' . tmpfile)
+    call s:ConvertText(tmpfile)
     setlocal nomod
     exe "e ".tmpfile
     exe "bw! ".a:slack_url
