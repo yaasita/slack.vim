@@ -7,12 +7,12 @@
 " Maintainer:	yaasita < https://github.com/yaasita/slack.vim >
 " Last Change:	2015/03/29.
 
-let w:yaasita_slack_hash = 0
+let g:yaasita_slack_hash = 0
 
 function! slack#OpenCh(slack_url) "{{{
     let tmpfile = tempname()
     if a:slack_url == "slack://ch/"
-        if !w:yaasita_slack_hash
+        if !g:yaasita_slack_hash
             call s:CreateHash()
         endif
         e slack://ch/
@@ -112,7 +112,7 @@ function! s:ConvertText(source_file) "{{{
 EOF
 endfunction "}}}
 function! s:Channel2ID(ch_name) "{{{
-    if !w:yaasita_slack_hash
+    if !g:yaasita_slack_hash
         call s:CreateHash()
     endif
 	perl << EOF
@@ -164,7 +164,7 @@ function! s:CreateHash() "{{{
         }
         close $fh;
 EOF
-    let w:yaasita_slack_hash = 1
+    let g:yaasita_slack_hash = 1
 endfunction "}}}
 function! s:ShowChIndex() "{{{
     perl << EOF
