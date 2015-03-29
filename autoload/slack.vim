@@ -123,7 +123,7 @@ endfunction "}}}
 function! s:CreateHash() "{{{
     perl << EOF
         use File::Temp qw/ tempfile tempdir /;
-        my $tempdir = tempdir(CLEANUP => 0);
+        my $tempdir = tempdir(CLEANUP => 1);
         chdir $tempdir;
         my $API_TOKEN=VIM::Eval("g:yaasita_slack_token");
 
