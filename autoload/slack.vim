@@ -5,7 +5,7 @@
 "
 " Version: 0.32
 " Maintainer:	yaasita < https://github.com/yaasita/slack.vim >
-" Last Change:	2015/03/29.
+" Last Change:	2015/03/30.
 
 let g:yaasita_slack_hash = 0
 
@@ -105,6 +105,8 @@ function! s:ConvertText(source_file) "{{{
     open (my $wr2, ">",$srcfile) or die $!;
     for (reverse @line){
         s/\\n/\n     /g;
+        s/&gt;/>/g;
+        s/&lt;/</g;
         print $wr2 $_;
     }
     print $wr2 "\n\n=== input ===\n";
