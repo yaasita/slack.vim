@@ -5,7 +5,7 @@
 "
 " Version: 0.32
 " Maintainer:	yaasita < https://github.com/yaasita/slack.vim >
-" Last Change:	2015/03/30.
+" Last Change:	2015/03/31.
 
 let g:yaasita_slack_hash = 0
 
@@ -54,7 +54,8 @@ function! slack#WriteCh(slack_url) "{{{
         shift @data;
         my $urlenc = "";
         for (@data){
-            my $str = $_;
+            chomp;
+            my $str = $_ . "\n";
             $str =~ s/([^ 0-9a-zA-Z])/"%".uc(unpack("H2",$1))/eg;
             $str =~ s/ /+/g;
             $urlenc .= $str;
