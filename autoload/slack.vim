@@ -171,7 +171,7 @@ EOF
 endfunction "}}}
 function! s:ShowChIndex() "{{{
     perl << EOF
-    my @line = keys %channels;
+    my @line = sort keys %channels;
     $_ = "slack://ch/$_" for @line;
     $curbuf->Append(1, @line);
 EOF
