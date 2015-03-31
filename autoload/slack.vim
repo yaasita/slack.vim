@@ -5,7 +5,7 @@
 "
 " Version: 0.32
 " Maintainer:	yaasita < https://github.com/yaasita/slack.vim >
-" Last Change:	2015/03/31.
+" Last Change:	2015/04/01.
 
 let g:yaasita_slack_hash = 0
 
@@ -60,6 +60,7 @@ function! slack#WriteCh(slack_url) "{{{
             $str =~ s/ /+/g;
             $urlenc .= $str;
         }
+        $urlenc =~ s/%0A$//;
         my $API_TOKEN = VIM::Eval("g:yaasita_slack_token");
         my $SERVER_ID = VIM::Eval("server_id");
         system("curl -s 'https://slack.com/api/chat.postMessage?token=${API_TOKEN}&channel=${SERVER_ID}&text=${urlenc}&as_user=1&pretty=1' > /dev/null") and die $!;
