@@ -5,7 +5,7 @@
 "
 " Version: 0.32
 " Maintainer:	yaasita < https://github.com/yaasita/slack.vim >
-" Last Change:	2015/04/01.
+" Last Change:	2015/06/05.
 
 let g:yaasita_slack_hash = 0
 
@@ -20,7 +20,7 @@ function! slack#OpenCh(slack_url) "{{{
         return
     endif
     "let tmpfile = "/tmp/slack" "debug
-    let server_name = matchstr(a:slack_url,'\v[a-zA-Z0-9\-]+$')
+    let server_name = matchstr(a:slack_url,'\v[a-zA-Z0-9\-_]+$')
     let server_id = s:Channel2ID(server_name)
     call system('curl -s -H "Accept-Encoding: gzip" "https://slack.com/api/channels.history?token=' . g:yaasita_slack_token . '&channel=' . server_id . '&pretty=1" | gunzip -c > ' . tmpfile)
     call s:ConvertText(tmpfile)
@@ -37,7 +37,7 @@ function! slack#WriteCh(slack_url) "{{{
         set nomod
         call slack#OpenCh(a:slack_url)
     endif
-    let server_name = matchstr(a:slack_url,'\v[a-zA-Z0-9\-]+$')
+    let server_name = matchstr(a:slack_url,'\v[a-zA-Z0-9\-_]+$')
     let server_id = s:Channel2ID(server_name)
     perl << EOF
     my $i = $curbuf->Count();
