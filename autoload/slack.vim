@@ -81,7 +81,7 @@ function! s:ConvertText(source_file) "{{{
     for (@data){
         chomp;
         my $line = $_;
-        unless ($line =~ /"text"|"user"|"ts"/) {
+        unless ($line =~ /"text"|"user"|"ts"|"url_private_download"/) {
             next;
         }
         while ($line =~ /((?:\\u[0-9a-f]{4})+)/g){
@@ -94,6 +94,7 @@ function! s:ConvertText(source_file) "{{{
         $line =~ s/^.*"user": "(\w+)".*/$users{$1}\: /;
         $line =~ s/^.*"text"\: "(.+)".+/$1 /;
         $line =~ s/<@(\w+?)>/"@".$users{$1}/e;
+        $line =~ s/"url_private_download"\: "(.+)".+/\nfile: $1\n/;
         $line =~ s#\\/#/#g;
         my $t = localtime();
         $line =~ s/^.*"ts"\: "(\d+)\.\d+"/$t = Time::Piece->strptime($1, '%s') and $t = $t + ONE_HOUR * 9 and $t->strftime("%Y-%m-%d %H:%M:%S")."\n"/e;
