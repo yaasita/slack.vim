@@ -10,19 +10,20 @@
 let g:yaasita_slack_hash = 0
 
 function! slack#OpenCh(slack_url) "{{{
+    if !g:yaasita_slack_hash
+        call s:CreateHash()
+    endif
     let tmpfile = tempname()
     if a:slack_url == "slack://ch/"
-        if !g:yaasita_slack_hash
-            call s:CreateHash()
-        endif
         e slack://ch/
         call s:ShowChIndex()
         return
     endif
     "let tmpfile = "/tmp/slack" "debug
-    let server_name = matchstr(a:slack_url,'\v[a-zA-Z0-9\-_]+$')
-    let server_id = s:Channel2ID(server_name)
-    call system('curl -s -H "Accept-Encoding: gzip" "https://slack.com/api/channels.history?token=' . g:yaasita_slack_token . '&channel=' . server_id . '&pretty=1" | gunzip -c > ' . tmpfile)
+    let ch_name = matchstr(a:slack_url,'\v[a-zA-Z0-9\-_]+$')
+    let ch_id = s:Channel2ID(ch_name)
+    call system('curl -s -H "Accept-Encoding: gzip" "https://slack.com/api/channels.history?token=' . 
+                \ g:yaasita_slack_token . '&channel=' . ch_id . '&pretty=1" | gunzip -c > ' . tmpfile)
     call s:ConvertText(tmpfile)
     setlocal nomod
     exe "e ".tmpfile
@@ -134,7 +135,7 @@ function! s:CreateHash() "{{{
         chdir $tempdir;
         my $API_TOKEN=VIM::Eval("g:yaasita_slack_token");
 
-        # server hash
+        # ch hash
         system("curl -s -H 'Accept-Encoding: gzip' 'https://slack.com/api/channels.list?token=${API_TOKEN}&pretty=1' | gunzip -c > channels_list.txt") and die $!;
         our %channels;
         open (my $fh, "<", 'channels_list.txt') or die $!;
